@@ -1,14 +1,50 @@
 /* ---------- Fonts ---------- */
 @font-face {
   font-family: 'Chillax';
-  src: url('../fonts/Chillax-Variable.woff2') format('woff2');
-  font-weight: 200 700;
+  src: url('../assets/fonts/Chillax/Chillax-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Chillax';
+  src: url('../assets/fonts/Chillax/Chillax-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Chillax';
+  src: url('../assets/fonts/Chillax/Chillax-Semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Chillax';
+  src: url('../assets/fonts/Chillax/Chillax-Bold.woff2') format('woff2');
+  font-weight: 700;
   font-display: swap;
 }
 @font-face {
   font-family: 'Cabinet Grotesk';
-  src: url('../fonts/CabinetGrotesk-Variable.woff2') format('woff2');
-  font-weight: 100 900;
+  src: url('../assets/fonts/CabinetGrotesk/CabinetGrotesk-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('../assets/fonts/CabinetGrotesk/CabinetGrotesk-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('../assets/fonts/CabinetGrotesk/CabinetGrotesk-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Cabinet Grotesk';
+  src: url('../assets/fonts/CabinetGrotesk/CabinetGrotesk-Black.woff2') format('woff2');
+  font-weight: 800;
   font-display: swap;
 }
 

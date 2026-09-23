@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>On-Demand — Sign up</title>
+  <meta name="description" content="Create an On-Demand account to connect with trusted local service professionals.">
+  <link rel="icon" type="image/svg+xml" href="assets/brand-mark.svg">
+  <link rel="apple-touch-icon" href="assets/brand-mark.svg">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="auth-page">
+  <video class="auth-video" autoplay muted loop playsinline poster="https://www.pexels.com/download/video/4296258/">
+    <source src="https://www.pexels.com/download/video/4296258/" type="video/mp4">
+  </video>
+  <div class="auth-backdrop" aria-hidden="true"></div>
+
+  <header class="auth-header">
+    <div class="auth-brand">
+      <a href="index.html" class="brand" aria-label="Back to home">
+        <span class="brand-mark" aria-hidden="true"><img src="assets/brand-mark.svg" alt="On-Demand brand mark"></span>
+        <span class="logo-word">on<span>—</span>demand</span>
+      </a>
+    </div>
+
+    <nav class="auth-switch" aria-label="Authentication navigation">
+      <a href="login.html">Login</a>
+      <a href="signup.html" class="active">Sign Up</a>
+    </nav>
+  </header>
+
+  <main class="auth-shell">
+    <section class="auth-card" aria-live="polite">
+      <div class="card-top">
+        <p class="label">Start your account</p>
+        <h1>Choose your lane.</h1>
+        <p class="subtitle"><bold></bold>Set up your profile and start connecting with vetted service providers and clients in minutes.</bold></p>
+      </div>
+
+      <div class="category-picker" role="tablist" aria-label="Choose account type">
+        <button type="button" class="category-btn" data-target="customer-signup" aria-selected="false">Customer</button>
+        <button type="button" class="category-btn" data-target="provider-signup" aria-selected="false">Service Provider</button>
+        <button type="button" class="category-btn" data-target="admin-signup" aria-selected="false">Admin</button>
+      </div>
+
+      <div class="auth-forms">
+        <form id="customer-signup" class="auth-form" novalidate>
+          <div class="form-grid">
+            <div class="form-row">
+              <input class="form-field" type="text" name="fullName" placeholder="Full name" aria-label="Full name">
+            </div>
+            <div class="form-row">
+              <input class="form-field" type="email" name="email" placeholder="Email address" aria-label="Email address">
+            </div>
+            <div class="form-row password-row">
+              <input id="customer-signup-password" class="form-field" type="password" name="password" placeholder="Password" aria-label="Password">
+              <button type="button" class="toggle-password" data-target="customer-signup-password" aria-label="Show password" aria-pressed="false">
+                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+              </button>
+            </div>
+            <div class="form-row password-row">
+              <input id="customer-signup-confirm" class="form-field" type="password" name="confirmPassword" placeholder="Confirm password" aria-label="Confirm password">
+              <button type="button" class="toggle-password" data-target="customer-signup-confirm" aria-label="Show password" aria-pressed="false">
+                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+              </button>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-light">Create account</button>
+            </div>
+          </div>
+        </form>
+
+        <form id="provider-signup" class="auth-form" novalidate>
+          <div class="form-grid">
+            <div class="form-row">
+              <input class="form-field" type="text" name="FullName" placeholder="Full Name" aria-label="Full Name">
+            </div>
+            <div class="form-row">
+              <input class="form-field" type="email" name="email" placeholder="Personal or Professional email" aria-label="Personal or Professional email">
+            </div>
+            <div class="form-row">
+              <select class="form-select" name="category" aria-label="Service category">
+                <option value="" selected disabled>Service category</option>
+                <option>Plumbing</option>
+                <option>Electrical</option>
+                <option>Cleaning</option>
+                <option>Painting</option>
+                <option>Appliance Repair</option>
+                <option>Carpentry</option>
+                <option>Landscaping</option>
+                <option>Dispatch</option>
+                <option>Cleaning</option>
+                <option>Painting</option>
+                <option>Carpentry</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label class="file-upload" for="identification-document">
+                <span class="file-upload__label">Upload ID document</span>
+                <input id="identification-document" class="form-field file-field" type="file" name="identificationDocument" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload ID document">
+              </label>
+            </div>
+            <div class="form-row password-row">
+              <input id="customer-signup-confirm" class="form-field" type="password" name="confirmPassword" placeholder="Confirm password" aria-label="Confirm password">
+              
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-light">Request Service ID</button>
+            </div>
+          </div>
+        </form>
+
+        <form id="admin-signup" class="auth-form" novalidate>
+          <div class="form-grid">
+            <div class="form-row">
+              <input class="form-field" type="text" name="adminName" placeholder="Admin name" aria-label="Admin name">
+            </div>
+            <div class="form-row">
+              <input class="form-field" type="email" name="email" placeholder="Work email" aria-label="Work email">
+            </div>
+            <div class="form-row">
+              <input class="form-field" type="text" name="organization" placeholder="Organization name" aria-label="Organization name">
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-light">Request Admin Access</button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <p class="auth-footer">Already have an account? <a href="login.html">Log in</a></p>
+    </section>
+  </main>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
