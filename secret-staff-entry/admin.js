@@ -21,11 +21,6 @@
     localStorage.removeItem(ADMIN_ROLE_KEY);
   }
 
-  function logoutAdmin() {
-    clearAdminSession();
-    window.location.replace('index.html');
-  }
-
   function attachIdleTimeout() {
     let timeoutId = null;
 
@@ -58,10 +53,6 @@
 
     document.body.classList.add('portal-ready');
 
-    const logoutButton = document.getElementById('logout-button');
-    if (logoutButton) {
-      logoutButton.addEventListener('click', logoutAdmin);
-    }
 
     attachIdleTimeout();
   }

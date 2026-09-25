@@ -35,84 +35,139 @@
       <div class="card-top">
         <p class="label">Start your account</p>
         <h1>Choose your lane.</h1>
-        <p class="subtitle"><bold></bold>Set up your profile and start connecting with vetted service providers and clients in minutes.</bold></p>
+        <p class="subtitle"><bold>Set up your profile and start connecting with vetted service providers and clients in minutes.</bold></p>
       </div>
 
       <div class="category-picker" role="tablist" aria-label="Choose account type">
-        <button type="button" class="category-btn" data-target="customer-signup" aria-selected="false">Customer</button>
-        <button type="button" class="category-btn" data-target="provider-signup" aria-selected="false">Service Provider</button>
+        <button type="button" class="btn-select is-selected" data-kind="category" data-role="customer" data-target="customer-options" aria-selected="true">Customer</button>
+        <button type="button" class="btn-select" data-kind="category" data-role="provider" data-target="provider-options" aria-selected="false">Service Provider</button>
       </div>
 
-      <div class="auth-forms">
-        <form id="customer-signup" class="auth-form" novalidate>
-          <div class="form-grid">
-            <div class="form-row">
-              <input class="form-field" type="text" name="fullName" placeholder="Full name" aria-label="Full name">
-            </div>
-            <div class="form-row">
-              <input class="form-field" type="email" name="email" placeholder="Email address" aria-label="Email address">
-            </div>
-            <div class="form-row password-row">
-              <input id="customer-signup-password" class="form-field" type="password" name="password" placeholder="Password" aria-label="Password">
-              <button type="button" class="toggle-password" data-target="customer-signup-password" aria-label="Show password" aria-pressed="false">
-                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
-              </button>
-            </div>
-            <div class="form-row password-row">
-              <input id="customer-signup-confirm" class="form-field" type="password" name="confirmPassword" placeholder="Confirm password" aria-label="Confirm password">
-              <button type="button" class="toggle-password" data-target="customer-signup-confirm" aria-label="Show password" aria-pressed="false">
-                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
-              </button>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-light">Create account</button>
-            </div>
-          </div>
-        </form>
+      <div class="auth-options is-visible" id="customer-options" data-role="customer">
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="customer" data-action="google" data-target="customer-success-screen" aria-selected="false">Continue with Google</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="customer" data-action="apple" data-target="customer-success-screen" aria-selected="false">Continue with Apple</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="customer" data-action="email" data-target="customer-email-form" aria-selected="false">Use Email</button>
+      </div>
 
-        <form id="provider-signup" class="auth-form" novalidate>
-          <div class="form-grid">
-            <div class="form-row">
-              <input class="form-field" type="text" name="FullName" placeholder="Full Name" aria-label="Full Name">
-            </div>
-            <div class="form-row">
-              <input class="form-field" type="email" name="email" placeholder="Personal or Professional email" aria-label="Personal or Professional email">
-            </div>
-            <div class="form-row">
-              <select class="form-select" name="category" aria-label="Service category">
-                <option value="" selected disabled>Service category</option>
-                <option>Plumbing</option>
-                <option>Electrical</option>
-                <option>Cleaning</option>
-                <option>Painting</option>
-                <option>Appliance Repair</option>
-                <option>Carpentry</option>
-                <option>Landscaping</option>
-                <option>Dispatch</option>
-                <option>Cleaning</option>
-                <option>Painting</option>
-                <option>Carpentry</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label class="file-upload" for="identification-document">
-                <span class="file-upload__label">Upload ID document</span>
-                <input id="identification-document" class="form-field file-field" type="file" name="identificationDocument" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload ID document">
-              </label>
-            </div>
-            <div class="form-row password-row">
-              <input id="customer-signup-confirm" class="form-field" type="password" name="confirmPassword" placeholder="Confirm password" aria-label="Confirm password">
-              
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-light">Request Service ID</button>
-            </div>
-          </div>
-        </form>
+      <div class="auth-options" id="provider-options" data-role="provider">
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="provider" data-action="google" data-target="provider-onboarding" aria-selected="false">Continue with Google</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="provider" data-action="apple" data-target="provider-onboarding" aria-selected="false">Continue with Apple</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="provider" data-action="email" data-target="provider-email-form" aria-selected="false">Use Email</button>
+      </div>
 
+      <form id="customer-email-form" class="auth-form" data-role="customer" novalidate>
+        <div class="form-grid">
+          <div class="form-row">
+            <input class="form-field" type="text" name="fullName" placeholder="Full name" aria-label="Full name">
+          </div>
+          <div class="form-row">
+            <input class="form-field" type="email" name="email" placeholder="Email address" aria-label="Email address">
+          </div>
+          <div class="form-row password-row">
+            <input id="customer-signup-password" class="form-field" type="password" name="password" placeholder="Password" aria-label="Password">
+            <button type="button" class="toggle-password" data-target="customer-signup-password" aria-label="Show password" aria-pressed="false">
+              <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+            </button>
+          </div>
+          <div class="form-row password-row">
+            <input id="customer-signup-confirm" class="form-field" type="password" name="confirmPassword" placeholder="Confirm password" aria-label="Confirm password">
+            <button type="button" class="toggle-password" data-target="customer-signup-confirm" aria-label="Show password" aria-pressed="false">
+              <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+            </button>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-light" data-next-screen="verification-screen">Create account</button>
+          </div>
+        </div>
+      </form>
+
+      <form id="provider-email-form" class="auth-form" data-role="provider" novalidate>
+        <div class="form-grid">
+          <div class="form-row">
+            <input class="form-field" type="text" name="fullName" placeholder="Full name" aria-label="Full name">
+          </div>
+          <div class="form-row">
+            <input class="form-field" type="email" name="email" placeholder="Professional email" aria-label="Professional email">
+          </div>
+          <div class="form-row password-row">
+            <input id="provider-signup-password" class="form-field" type="password" name="password" placeholder="Password" aria-label="Password">
+            <button type="button" class="toggle-password" data-target="provider-signup-password" aria-label="Show password" aria-pressed="false">
+              <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+            </button>
+          </div>
+          <div class="form-row password-row">
+            <input id="provider-signup-confirm" class="form-field" type="password" name="confirmPassword" placeholder="Confirm password" aria-label="Confirm password">
+            <button type="button" class="toggle-password" data-target="provider-signup-confirm" aria-label="Show password" aria-pressed="false">
+              <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+            </button>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-light" data-next-screen="verification-screen">Continue</button>
+          </div>
+        </div>
+      </form>
+
+      <form id="provider-onboarding" class="auth-form" data-role="provider" novalidate>
+        <div class="form-grid">
+          <div class="form-row">
+            <select class="form-select" name="serviceCategory" aria-label="Service category">
+              <option value="" selected disabled>Service category</option>
+              <option>Plumbing</option>
+              <option>Electrical</option>
+              <option>Cleaning</option>
+              <option>Painting</option>
+              <option>Appliance Repair</option>
+              <option>Carpentry</option>
+              <option>Landscaping</option>
+              <option>Dispatch</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="file-upload" for="identification-document">
+              <span class="file-upload__label">Upload ID document</span>
+              <input id="identification-document" class="form-field file-field" type="file" name="identificationDocument" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload ID document">
+            </label>
+          </div>
+          <div class="form-row">
+            <label class="file-upload" for="business-license">
+              <span class="file-upload__label">Upload business or trade proof</span>
+              <input id="business-license" class="form-field file-field" type="file" name="businessLicense" accept=".pdf,.jpg,.jpeg,.png" aria-label="Upload business or trade proof">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-light" data-next-screen="verification-screen">Request verification</button>
+          </div>
+        </div>
+      </form>
+
+      <div id="verification-screen" class="auth-screen" aria-live="polite">
+        <div class="auth-screen__panel">
+          <p class="label">Check your inbox</p>
+          <h2>Confirm your email</h2>
+          <p class="subtitle">We just sent a verification link to your email. Open it to continue.</p>
+          <button type="button" class="btn btn-light" data-verify="true">I've clicked the link</button>
+        </div>
+      </div>
+
+      <div id="provider-processing-screen" class="auth-screen" aria-live="polite">
+        <div class="auth-screen__panel">
+          <p class="label">Almost there</p>
+          <h2>Verification request is processing</h2>
+          <p class="subtitle">Your service provider review is being processed. We’ll send feedback shortly.</p>
+        </div>
+      </div>
+
+      <div id="customer-success-screen" class="auth-screen" aria-live="polite">
+        <div class="auth-screen__panel">
+          <p class="label">All set</p>
+          <h2>Your email is verified</h2>
+          <p class="subtitle">Welcome to On-Demand. You can now continue to your account.</p>
+        </div>
       </div>
 
       <p class="auth-footer">Already have an account? <a href="login.html">Log in</a></p>

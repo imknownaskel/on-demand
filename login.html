@@ -39,50 +39,60 @@
       </div>
 
       <div class="category-picker" role="tablist" aria-label="Choose account type">
-        <button type="button" class="category-btn" data-target="customer-login" aria-selected="false">Customer</button>
-        <button type="button" class="category-btn" data-target="provider-login" aria-selected="false">Service Provider</button>
+        <button type="button" class="btn-select is-selected" data-kind="category" data-role="customer" data-target="customer-options" aria-selected="true">Customer</button>
+        <button type="button" class="btn-select" data-kind="category" data-role="provider" data-target="provider-options" aria-selected="false">Service Provider</button>
       </div>
 
-      <div class="auth-forms">
-        <form id="customer-login" class="auth-form" novalidate>
-          <div class="form-grid">
-            <div class="form-row">
-              <input class="form-field" type="email" name="customerEmail" placeholder="Email address" aria-label="Customer email">
-            </div>
-            <div class="form-row password-row">
-              <input id="customer-login-password" class="form-field" type="password" name="customerPassword" placeholder="Password" aria-label="Customer password">
-              <button type="button" class="toggle-password" data-target="customer-login-password" aria-label="Show password" aria-pressed="false">
-                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
-              </button>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-light">Login</button>
-              <a href="#" class="auth-link">Forgot password?</a>
-            </div>
-          </div>
-        </form>
-
-        <form id="provider-login" class="auth-form" novalidate>
-          <div class="form-grid">
-            <div class="form-row">
-              <input class="form-field" type="text" name="providerID" placeholder="Enter Service Provider ID" aria-label="Service provider ID">
-            </div>
-            <div class="form-row password-row">
-              <input id="provider-login-password" class="form-field" type="password" name="providerPassword" placeholder="Password" aria-label="Service provider password">
-              <button type="button" class="toggle-password" data-target="provider-login-password" aria-label="Show password" aria-pressed="false">
-                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
-              </button>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-light">Login</button>
-              <a href="#" class="auth-link">Forgot password?</a>
-            </div>
-          </div>
-        </form>
-
+      <div class="auth-options is-visible" data-role="customer" id="customer-options">
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="customer" data-action="google" aria-selected="false">Continue with Google</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="customer" data-action="apple" aria-selected="false">Continue with Apple</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="customer" data-action="email" data-target="customer-login" aria-selected="false">Use Email</button>
       </div>
+
+      <div class="auth-options" data-role="provider" id="provider-options">
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="provider" data-action="google" aria-selected="false">Continue with Google</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="provider" data-action="apple" aria-selected="false">Continue with Apple</button>
+        <button type="button" class="btn-select auth-option" data-kind="option" data-role="provider" data-action="email" data-target="provider-login" aria-selected="false">Use Email</button>
+      </div>
+
+      <form id="customer-login" class="auth-form" data-role="customer" novalidate>
+        <div class="form-grid">
+          <div class="form-row">
+            <input class="form-field" type="email" name="customerEmail" placeholder="Email address" aria-label="Customer email">
+          </div>
+          <div class="form-row password-row">
+            <input id="customer-login-password" class="form-field" type="password" name="customerPassword" placeholder="Password" aria-label="Customer password">
+            <button type="button" class="toggle-password" data-target="customer-login-password" aria-label="Show password" aria-pressed="false">
+              <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+            </button>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-light">Login</button>
+            <a href="#" class="auth-link">Forgot password?</a>
+          </div>
+        </div>
+      </form>
+
+      <form id="provider-login" class="auth-form" data-role="provider" novalidate>
+        <div class="form-grid">
+          <div class="form-row">
+            <input class="form-field" type="text" name="providerID" placeholder="Enter Service Provider ID" aria-label="Service provider ID">
+          </div>
+          <div class="form-row password-row">
+            <input id="provider-login-password" class="form-field" type="password" name="providerPassword" placeholder="Password" aria-label="Service provider password">
+            <button type="button" class="toggle-password" data-target="provider-login-password" aria-label="Show password" aria-pressed="false">
+              <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
+            </button>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-light">Login</button>
+            <a href="#" class="auth-link">Forgot password?</a>
+          </div>
+        </div>
+      </form>
+
 
       <p class="auth-footer">New here? <a href="signup.html">Create an account</a></p>
     </section>

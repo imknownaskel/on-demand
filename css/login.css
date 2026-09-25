@@ -181,7 +181,7 @@ body.auth-page {
   margin: 1.4rem 0 1.2rem;
 }
 
-.category-btn {
+.btn-select {
   appearance: none;
   border: 1px solid rgba(255, 255, 255, 0.14);
   background: var(--auth-soft);
@@ -195,34 +195,65 @@ body.auth-page {
   transition: all 0.2s ease;
 }
 
-.category-btn:hover,
-.category-btn:focus-visible {
+.btn-select :hover,
+.btn-select:focus-visible {
   border-color: rgba(255, 255, 255, 0.26);
   background: rgba(255, 255, 255, 0.08);
   outline: none;
 }
 
-.category-btn.is-selected {
+.btn-select.is-selected {
   background: rgba(255, 255, 255, 0.14);
   border-color: rgba(255, 255, 255, 0.26);
   color: #fff;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 
-.auth-forms {
+.auth-options {
   position: relative;
   min-height: 220px;
+  display: none;
+  gap: 0.75rem;
+}
+
+.auth-options.is-visible,
+.form-placeholder.is-visible {
+  display: grid;
+  animation: fadeUp 0.25s ease;
 }
 
 .auth-form,
-.form-placeholder {
+.auth-screen {
   display: none;
 }
 
 .auth-form.is-visible,
-.form-placeholder.is-visible {
+.auth-screen.is-visible {
   display: block;
   animation: fadeUp 0.25s ease;
+}
+
+.auth-screen__panel {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 220px;
+  padding: 1.6rem 1.3rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+}
+
+.auth-screen__panel h2 {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: clamp(1.8rem, 2vw, 2.4rem);
+  color: #fff;
+  letter-spacing: -0.05em;
+}
+
+.auth-screen__panel .subtitle {
+  max-width: 34ch;
 }
 
 .form-placeholder {
