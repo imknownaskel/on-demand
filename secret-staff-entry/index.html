@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrative Access</title>
+    <meta name="description" content="Restricted administrative access portal." />
+    <style>
+      :root {
+        --auth-bg: rgba(8, 10, 16, 0.3);
+        --auth-edge: rgba(255, 255, 255, 0.18);
+        --auth-soft: rgba(255, 255, 255, 0.06);
+        --auth-strong: rgba(255, 255, 255, 0.12);
+        --text-soft: rgba(255, 255, 255, 0.72);
+        --text-faint: rgba(255, 255, 255, 0.5);
+        --shadow-soft: 0 24px 80px rgba(0, 0, 0, 0.42);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+        font-family: Inter, "Segoe UI", sans-serif;
+      }
+      .bg-video {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+      }
+
+      body.auth-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background:
+          url('https://images.pexels.com/photos/32588545/pexels-photo-32588545.jpeg?auto=compress&cs=tinysrgb&w=1600') center center / cover no-repeat,
+          #081018;
+        color: #fff;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body.auth-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          linear-gradient(135deg, rgba(8, 10, 16, 0.7), rgba(8, 10, 16, 0.25)),
+          radial-gradient(circle at top left, rgba(255, 255, 255, 0.12), transparent 30%),
+          rgba(8, 10, 16, 0.16);
+        z-index: 0;
+      }
+
+      .auth-header {
+        position: relative;
+        z-index: 2;
+        width: min(100%, 1220px);
+        margin: 0 auto;
+        padding: 1.3rem 2rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+      }
+
+      .identity-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 999px;
+        background: rgba(10, 11, 18, 0.28);
+        backdrop-filter: blur(8px);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        font-size: 0.68rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .auth-shell {
+        position: relative;
+        z-index: 2;
+        width: min(100%, 1220px);
+        min-height: calc(100vh - 110px);
+        margin: 0 auto;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem 1.25rem 3rem;
+      }
+
+      .auth-card {
+        width: min(100%, 680px);
+        padding: clamp(1.5rem, 2vw, 2.4rem);
+        background: rgba(8, 12, 18, 0.26);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 20px;
+        box-shadow: var(--shadow-soft);
+        /* backdrop-filter: blur(12px); */
+      }
+
+      .card-top {
+        display: grid;
+        gap: 0.6rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .card-top .label {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.72);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+      }
+
+      .card-top h1 {
+        margin: 0;
+        font-size: clamp(2.2rem, 3vw, 3.4rem);
+        letter-spacing: -0.06em;
+        line-height: 0.96;
+        color: #fff;
+      }
+
+      .subtitle {
+        margin: 0;
+        color: var(--text-soft);
+        font-size: 0.98rem;
+        max-width: 38ch;
+      }
+
+      .step-indicator {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 1.4rem 0 1.1rem;
+      }
+
+      .step {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .step.active {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.26);
+        color: #fff;
+      }
+
+      .step-line {
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.14);
+      }
+
+      .auth-forms {
+        position: relative;
+        min-height: 220px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .field-wrap {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .field-group {
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      label {
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .form-field {
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.04);
+        color: #fff;
+        padding: 1rem 1.15rem;
+        font-size: 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      }
+
+      .form-field::placeholder {
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      .form-field:focus {
+        outline: none;
+        border-color: rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.06);
+        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.05);
+      }
+
+      .mfa-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 4px 0 14px;
+        font-size: 0.82rem;
+        color: var(--text-soft);
+      }
+
+      .link-button {
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 0.8rem;
+      }
+
+      button[type="submit"],
+      button[type="button"] {
+        appearance: none;
+        border: none;
+        border-radius: 12px;
+        font: inherit;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+      }
+
+      button[type="submit"]:hover,
+      button[type="button"]:hover {
+        transform: translateY(-1px);
+      }
+
+      .primary-btn {
+        flex: 1;
+        min-height: 48px;
+        background: linear-gradient(135deg, #f8fafc 0%, #cfe7ff 100%);
+        color: #07131d;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .secondary-btn {
+        min-width: 120px;
+        min-height: 48px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        color: #fff;
+      }
+
+      .notice {
+        margin-top: 1.2rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.82rem;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 680px) {
+        .auth-header {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .auth-card {
+          padding: 1.4rem 1.1rem 1.2rem;
+        }
+
+        .button-row {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body class="auth-page">
+    <video class="bg-video" autoplay muted loop playsinline>
+    <source src="/assets/adminBg.mp4" type="video/mp4" />
+  </video>
+    <header class="auth-header" aria-label="Administrative identity">
+      <div class="identity-pill">Admin Access</div>
+    </header>
+
+    <main class="auth-shell">
+      <section class="auth-card" aria-live="polite">
+        <div class="card-top">
+          <p class="label">Restricted Access</p>
+          <h1>Administrative Sign-In</h1>
+          <p class="subtitle">Enter the authorized credentials and complete the multi-factor verification step.</p>
+        </div>
+
+        <div class="step-indicator" aria-label="Authentication progress">
+          <span class="step active" aria-label="Current step one">1</span>
+          <span class="step-line" aria-hidden="true"></span>
+          <span class="step" aria-label="Step two">2</span>
+        </div>
+
+        <form id="admin-login-form" novalidate>
+          <div class="field-wrap">
+            <div class="field-group">
+              <label for="admin-id">Admin ID</label>
+              <input id="admin-id" class="form-field" name="adminId" type="text" inputmode="text" autocomplete="username" placeholder="Enter admin identifier" required />
+            </div>
+
+            <div class="field-group">
+              <label for="admin-password">Password</label>
+              <input id="admin-password" class="form-field" name="adminPassword" type="password" autocomplete="current-password" placeholder="Enter password" required />
+            </div>
+
+            <div class="button-row">
+              <button type="submit" class="primary-btn">Continue</button>
+            </div>
+          </div>
+        </form>
+
+        <form id="admin-mfa-form" class="hidden" novalidate>
+          <div class="field-wrap">
+            <div class="field-group">
+              <label for="admin-token">MFA Token</label>
+              <input id="admin-token" class="form-field" name="adminMfaToken" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456" aria-describedby="mfa-details" required />
+            </div>
+
+            <div class="mfa-meta" id="mfa-details">
+              <span>6-digit verification code</span>
+              <button type="button" class="link-button" id="admin-resend-btn">Resend</button>
+            </div>
+
+            <div class="button-row">
+              <button type="button" class="secondary-btn" id="admin-back-step">Back</button>
+              <button type="submit" class="primary-btn">Verify Access</button>
+            </div>
+          </div>
+        </form>
+
+        <p class="notice">This environment is monitored and restricted to authorized administrators only.</p>
+      </section>
+    </main>
+
+    <script src="admin.js"></script>
+  </body>
+</html>

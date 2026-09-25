@@ -41,7 +41,6 @@
       <div class="category-picker" role="tablist" aria-label="Choose account type">
         <button type="button" class="category-btn" data-target="customer-login" aria-selected="false">Customer</button>
         <button type="button" class="category-btn" data-target="provider-login" aria-selected="false">Service Provider</button>
-        <button type="button" class="category-btn" data-target="admin-login" aria-selected="false">Admin</button>
       </div>
 
       <div class="auth-forms">
@@ -83,24 +82,6 @@
           </div>
         </form>
 
-        <form id="admin-login" class="auth-form" novalidate>
-          <div class="form-grid">
-            <div class="form-row">
-              <input class="form-field" type="email" name="adminEmail" placeholder="Admin email" aria-label="Admin email">
-            </div>
-            <div class="form-row password-row">
-              <input id="admin-login-password" class="form-field" type="password" name="adminPassword" placeholder="Password" aria-label="Admin password">
-              <button type="button" class="toggle-password" data-target="admin-login-password" aria-label="Show password" aria-pressed="false">
-                <svg class="icon-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>
-                <svg class="icon-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"/><path d="M10.6 10.6A2 2 0 0 0 13.4 13.4"/><path d="M9.3 5.8A12.2 12.2 0 0 1 12 5c6.5 0 10 7 10 7a18.3 18.3 0 0 1-4.6 5.8"/><path d="M6.5 6.9A17.8 17.8 0 0 0 2 12s3.5 7 10 7a11.2 11.2 0 0 0 5.5-1.5"/></svg>
-              </button>
-            </div>
-            <div class="form-actions">
-              <button type="submit" class="btn btn-light">Login</button>
-              <a href="#" class="auth-link">Forgot password?</a>
-            </div>
-          </div>
-        </form>
       </div>
 
       <p class="auth-footer">New here? <a href="signup.html">Create an account</a></p>
