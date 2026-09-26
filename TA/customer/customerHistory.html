@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>On-Demand History</title>
+    <meta
+      name="description"
+      content="Expanded service history with glassmorphism cards, matching the home dashboard."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../assets/brand-mark.svg" />
+    <link rel="apple-touch-icon" href="../../assets/brand-mark.svg" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <style>
+      :root {
+        --page-bg: #e9e5df;
+        --panel-bg: rgba(255, 255, 255, 0.18);
+        --panel-border: rgba(255, 255, 255, 0.3);
+        --soft: #111827;
+        --soft-2: rgba(17, 24, 39, 0.72);
+        --muted: rgba(17, 24, 39, 0.6);
+        --shadow: rgba(15, 23, 42, 0.12);
+        --accent: #69c4ff;
+        --accent-strong: #3ea0ff;
+        --green: #9bd9b0;
+        --purple: #b8abff;
+        --red: #f0a9a3;
+        --white: #ffffff;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: var(--font-body);
+        background: var(--page-bg);
+        color: var(--soft);
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px 24px 40px;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .desktop-shell {
+        width: min(1220px, 100%);
+        min-height: 760px;
+        display: flex;
+        gap: 24px;
+      }
+
+      .sidebar {
+        width: 280px;
+        min-width: 280px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid var(--panel-border);
+        border-radius: 34px;
+        padding: 18px 18px 20px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 20px 38px rgba(15,23,42,0.08);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 8px 18px;
+        font-family: var(--font-head);
+        font-weight: 800;
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        letter-spacing: -0.06em;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+      }
+
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .sidebar-nav {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .sidebar-nav button {
+        border: 0;
+        text-align: left;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 600;
+        transition: 0.2s ease;
+      }
+
+      .sidebar-nav button.active {
+        background: rgba(255,255,255,0.34);
+        color: var(--soft);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+      }
+
+      .sidebar-nav button:hover {
+        background: rgba(255,255,255,0.14);
+        color: var(--soft);
+      }
+
+      .side-card {
+        margin-top: auto;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 22px;
+        padding: 16px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .side-card small {
+        display: block;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.68rem;
+      }
+
+      .side-card strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.2rem;
+        font-family: var(--font-head);
+        letter-spacing: -0.05em;
+      }
+
+      .main-panel {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      /* History panel: the recent-card pattern, expanded to fill the page */
+      .history-panel {
+        position: relative;
+        flex: 1;
+        min-height: 540px;
+        border-radius: 34px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 20px 40px rgba(15,23,42,0.08);
+        padding: 22px 22px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        overflow: hidden;
+      }
+
+      .history-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .history-head h1 {
+        margin: 0;
+        font-family: var(--font-head);
+        font-size: clamp(1.4rem, 2vw, 1.9rem);
+        letter-spacing: -0.06em;
+      }
+
+      .history-head span {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .history-filters {
+        display: flex;
+        gap: 8px;
+      }
+
+      .history-filters button {
+        border: 0;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: var(--muted);
+        font-weight: 600;
+        font-size: 0.82rem;
+      }
+
+      .history-filters button.active {
+        background: rgba(255,255,255,0.36);
+        color: var(--soft);
+      }
+
+      .history-scroll {
+        flex: 1;
+        overflow-y: auto;
+        display: grid;
+        gap: 20px;
+        padding-bottom: 18px;
+      }
+
+      .history-group-label {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .history-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .history-entry {
+        display: grid;
+        gap: 10px;
+        padding: 14px 14px 12px;
+        border-radius: 20px;
+        background: rgba(255,255,255,0.11);
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+
+      .history-entry-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .history-entry-copy {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .history-entry-copy strong {
+        display: block;
+        font-family: var(--font-head);
+        font-size: 1rem;
+        letter-spacing: -0.04em;
+      }
+
+      .history-entry-copy small {
+        display: block;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .history-entry-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .price {
+        font-family: var(--font-head);
+        font-size: 0.94rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .status-badge {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: rgba(155,217,176,0.22);
+        color: #2f6b45;
+      }
+
+      .status-badge.cancelled {
+        background: rgba(240,169,163,0.24);
+        color: #8a3a33;
+      }
+
+      .history-entry-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 10px;
+        color: var(--muted);
+        font-size: 0.82rem;
+        padding-left: 20px;
+      }
+
+      .history-entry-meta .sep {
+        opacity: 0.5;
+      }
+
+      .rating {
+        color: var(--accent-strong);
+        letter-spacing: 1px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-strong);
+        box-shadow: 0 0 0 4px rgba(105,196,255,0.14);
+      }
+
+      .dot.green { background: var(--green); box-shadow: 0 0 0 4px rgba(155,217,176,0.14); }
+      .dot.purple { background: var(--purple); box-shadow: 0 0 0 4px rgba(184,171,255,0.18); }
+      .dot.red { background: var(--red); box-shadow: 0 0 0 4px rgba(240,169,163,0.18); }
+
+      .mobile-nav {
+        display: none;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 18px 14px 110px;
+        }
+
+        .desktop-shell {
+          display: block;
+          width: min(100%, 430px);
+        }
+
+        .sidebar {
+          display: none;
+        }
+
+        .main-panel {
+          width: 100%;
+        }
+
+        .history-panel {
+          min-height: 680px;
+          border-radius: 36px;
+        }
+
+        .history-entry-meta {
+          padding-left: 0;
+        }
+
+        .mobile-nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          width: min(92vw, 360px);
+          position: fixed;
+          left: 50%;
+          bottom: 18px;
+          transform: translateX(-50%);
+          padding: 8px 10px;
+          border-radius: 24px;
+          background: rgba(255,255,255,0.18);
+          border: 1px solid rgba(255,255,255,0.26);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          box-shadow: 0 16px 30px rgba(15,23,42,0.12);
+          z-index: 30;
+        }
+
+        .mobile-nav button {
+          border: 0;
+          background: transparent;
+          color: var(--muted);
+          border-radius: 16px;
+          padding: 10px 8px 8px;
+          display: grid;
+          place-items: center;
+          gap: 4px;
+          font-size: 0.78rem;
+          font-weight: 600;
+        }
+
+        .mobile-nav button.active {
+          background: rgba(255,255,255,0.38);
+          color: var(--soft);
+        }
+
+        .mobile-nav .icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 22px;
+          font-size: 0.96rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desktop-shell">
+      <aside class="sidebar" aria-label="Sidebar navigation">
+        <div class="brand" aria-label="On-demand brand">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="../../assets/brand-mark.svg" alt="On-Demand" />
+          </span>
+          <span>on-demand</span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <button type="button" onClick="window.location.href='customerHome.html'">Home</button>
+          <button type="button" onClick="window.location.href='customerHistory.html'" class="active">History</button>
+          <button type="button" onClick="window.location.href='customerSettings.html'">Settings</button>
+        </nav>
+
+        <div class="side-card">
+          <small>Total spent</small>
+          <strong>$612</strong>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <section class="history-panel" aria-label="Service history">
+          <div class="history-head">
+            <div>
+              <h1>History</h1>
+              <span>18 services</span>
+            </div>
+            <div class="history-filters">
+              <button type="button" class="active">All</button>
+              <button type="button">Completed</button>
+              <button type="button">Cancelled</button>
+            </div>
+          </div>
+
+          <div class="history-scroll">
+            <div>
+              <p class="history-group-label">Today</p>
+              <div class="history-list">
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot"></span>
+                      <div>
+                        <strong>Plumbing</strong>
+                        <small>12 min ago &middot; 34 min</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge">Completed</span>
+                      <span class="price">$32</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Tunde A.</span>
+                    <span class="sep">&middot;</span>
+                    <span>12 Wuse Crescent, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  </div>
+                </div>
+
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot green"></span>
+                      <div>
+                        <strong>Electrical</strong>
+                        <small>1 hr ago &middot; 52 min</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge">Completed</span>
+                      <span class="price">$64</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Grace O.</span>
+                    <span class="sep">&middot;</span>
+                    <span>4 Gwarinpa Ave, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+                  </div>
+                </div>
+
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot purple"></span>
+                      <div>
+                        <strong>Cleaning</strong>
+                        <small>2 hrs ago &middot; 1 hr 10 min</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge">Completed</span>
+                      <span class="price">$48</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Blessing N.</span>
+                    <span class="sep">&middot;</span>
+                    <span>9 Jabi Lake Rd, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p class="history-group-label">Yesterday</p>
+              <div class="history-list">
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot red"></span>
+                      <div>
+                        <strong>Appliance repair</strong>
+                        <small>9:40 AM</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge cancelled">Cancelled</span>
+                      <span class="price">$0</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Ibrahim S.</span>
+                    <span class="sep">&middot;</span>
+                    <span>21 Utako St, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span>Cancelled by provider</span>
+                  </div>
+                </div>
+
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot"></span>
+                      <div>
+                        <strong>Plumbing</strong>
+                        <small>3:15 PM &middot; 40 min</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge">Completed</span>
+                      <span class="price">$29</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Tunde A.</span>
+                    <span class="sep">&middot;</span>
+                    <span>12 Wuse Crescent, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p class="history-group-label">This week</p>
+              <div class="history-list">
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot green"></span>
+                      <div>
+                        <strong>Electrical</strong>
+                        <small>Mon &middot; 1 hr 5 min</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge">Completed</span>
+                      <span class="price">$71</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Grace O.</span>
+                    <span class="sep">&middot;</span>
+                    <span>4 Gwarinpa Ave, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+                  </div>
+                </div>
+
+                <div class="history-entry">
+                  <div class="history-entry-top">
+                    <div class="history-entry-copy">
+                      <span class="dot purple"></span>
+                      <div>
+                        <strong>Cleaning</strong>
+                        <small>Sun &middot; 55 min</small>
+                      </div>
+                    </div>
+                    <div class="history-entry-right">
+                      <span class="status-badge">Completed</span>
+                      <span class="price">$45</span>
+                    </div>
+                  </div>
+                  <div class="history-entry-meta">
+                    <span>Blessing N.</span>
+                    <span class="sep">&middot;</span>
+                    <span>9 Jabi Lake Rd, Abuja</span>
+                    <span class="sep">&middot;</span>
+                    <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button type="button" onClick="window.location.href='customerHome.html'"><span class="icon">&#8962;</span><span>Home</span></button>
+      <button type="button" class="active" onClick="window.location.href='customerHistory.html'"><span class="icon">&#8635;</span><span>History</span></button>
+      <button type="button" onClick="window.location.href='settings.html'"><span class="icon">&#9881;</span><span>Settings</span></button>
+    </nav>
+  </body>
+</html>

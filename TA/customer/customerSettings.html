@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>On-Demand Settings</title>
+    <meta
+      name="description"
+      content="Customer settings: account, accessibility, notifications, privacy & security, appearance, preferences, and help — matching the home and history dashboards."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../assets/brand-mark.svg" />
+    <link rel="apple-touch-icon" href="../../assets/brand-mark.svg" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <style>
+      :root {
+        --page-bg: #e9e5df;
+        --panel-bg: rgba(255, 255, 255, 0.18);
+        --panel-border: rgba(255, 255, 255, 0.3);
+        --soft: #111827;
+        --soft-2: rgba(17, 24, 39, 0.72);
+        --muted: rgba(17, 24, 39, 0.6);
+        --shadow: rgba(15, 23, 42, 0.12);
+        --accent: #69c4ff;
+        --accent-strong: #3ea0ff;
+        --green: #9bd9b0;
+        --purple: #b8abff;
+        --red: #f0a9a3;
+        --white: #ffffff;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: var(--font-body);
+        background: var(--page-bg);
+        color: var(--soft);
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px 24px 40px;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .desktop-shell {
+        width: min(1220px, 100%);
+        min-height: 760px;
+        display: flex;
+        gap: 24px;
+      }
+
+      .sidebar {
+        width: 280px;
+        min-width: 280px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid var(--panel-border);
+        border-radius: 34px;
+        padding: 18px 18px 20px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 20px 38px rgba(15,23,42,0.08);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 8px 18px;
+        font-family: var(--font-head);
+        font-weight: 800;
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        letter-spacing: -0.06em;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+      }
+
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .sidebar-nav {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .sidebar-nav button {
+        border: 0;
+        text-align: left;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 600;
+        transition: 0.2s ease;
+      }
+
+      .sidebar-nav button.active {
+        background: rgba(255,255,255,0.34);
+        color: var(--soft);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+      }
+
+      .sidebar-nav button:hover {
+        background: rgba(255,255,255,0.14);
+        color: var(--soft);
+      }
+
+      .side-card {
+        margin-top: auto;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 22px;
+        padding: 16px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .side-card small {
+        display: block;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.68rem;
+      }
+
+      .side-card strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.2rem;
+        font-family: var(--font-head);
+        letter-spacing: -0.05em;
+      }
+
+      .main-panel {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      /* Settings panel: same glass-card language as the map/history panels */
+      .settings-panel {
+        position: relative;
+        flex: 1;
+        min-height: 540px;
+        border-radius: 34px;
+        border: 1px solid var(--panel-border);
+        background: rgba(255,255,255,0.16);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 20px 40px rgba(15,23,42,0.08);
+        padding: 22px 22px 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        overflow: hidden;
+      }
+
+      .settings-head h1 {
+        margin: 0;
+        font-family: var(--font-head);
+        font-size: clamp(1.4rem, 2vw, 1.9rem);
+        letter-spacing: -0.06em;
+      }
+
+      .settings-head span {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .settings-scroll {
+        flex: 1;
+        overflow-y: auto;
+        display: grid;
+        gap: 18px;
+        padding-bottom: 18px;
+      }
+
+      .group-label {
+        margin: 0 0 10px;
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .settings-group {
+        border-radius: 22px;
+        background: rgba(255,255,255,0.11);
+        border: 1px solid rgba(255,255,255,0.18);
+        padding: 16px 16px 6px;
+      }
+
+      .settings-list {
+        display: grid;
+      }
+
+      .settings-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 12px 2px;
+        border-top: 1px solid rgba(17,24,39,0.07);
+      }
+
+      .settings-row:first-child {
+        border-top: 0;
+      }
+
+      .settings-subrow {
+        padding-left: 18px;
+      }
+
+      .settings-row-copy strong {
+        display: block;
+        font-family: var(--font-head);
+        font-size: 0.96rem;
+        letter-spacing: -0.03em;
+      }
+
+      .settings-row-copy small {
+        display: block;
+        color: var(--muted);
+        margin-top: 2px;
+        font-size: 0.8rem;
+      }
+
+      .row-danger strong {
+        color: #b3352c;
+      }
+
+      .row-right {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+      }
+
+      .row-value {
+        color: var(--muted);
+        font-size: 0.88rem;
+      }
+
+      .chevron {
+        color: var(--muted);
+        font-size: 1.1rem;
+        line-height: 1;
+      }
+
+      .segmented {
+        display: flex;
+        background: rgba(17,24,39,0.06);
+        border-radius: 999px;
+        padding: 3px;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+
+      .segmented button {
+        border: 0;
+        background: transparent;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--muted);
+      }
+
+      .segmented button.active {
+        background: rgba(255,255,255,0.7);
+        color: var(--soft);
+        box-shadow: 0 1px 2px rgba(15,23,42,0.12);
+      }
+
+      .toggle {
+        position: relative;
+        width: 44px;
+        height: 26px;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+
+      .toggle input {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        margin: 0;
+        cursor: pointer;
+        z-index: 1;
+      }
+
+      .toggle .track {
+        position: absolute;
+        inset: 0;
+        background: rgba(17,24,39,0.18);
+        border-radius: 999px;
+        transition: 0.2s ease;
+      }
+
+      .toggle .thumb {
+        position: absolute;
+        top: 3px;
+        left: 3px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ffffff;
+        box-shadow: 0 2px 4px rgba(15,23,42,0.2);
+        transition: 0.2s ease;
+      }
+
+      .toggle input:checked + .track {
+        background: var(--accent-strong);
+      }
+
+      .toggle input:checked ~ .thumb {
+        transform: translateX(18px);
+      }
+
+      .swatches {
+        display: flex;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+
+      .swatch {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        padding: 0;
+      }
+
+      .swatch.active {
+        border-color: var(--soft);
+      }
+
+      .settings-subheading {
+        margin: 4px 0 8px;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .session-list {
+        margin-top: 8px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(17,24,39,0.07);
+        display: grid;
+        gap: 8px;
+      }
+
+      .session-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.09);
+        border: 1px solid rgba(255,255,255,0.16);
+      }
+
+      .session-copy strong {
+        display: block;
+        font-size: 0.9rem;
+        font-family: var(--font-head);
+        letter-spacing: -0.02em;
+      }
+
+      .session-copy small {
+        display: block;
+        color: var(--muted);
+        margin-top: 2px;
+        font-size: 0.78rem;
+      }
+
+      .badge-current {
+        padding: 4px 10px;
+        border-radius: 999px;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        background: rgba(155,217,176,0.24);
+        color: #2f6b45;
+        flex-shrink: 0;
+      }
+
+      .signout-btn {
+        border: 0;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(240,169,163,0.24);
+        color: #8a3a33;
+        font-size: 0.76rem;
+        font-weight: 700;
+        flex-shrink: 0;
+      }
+
+      .signout-all {
+        margin-top: 2px;
+        border: 0;
+        padding: 10px;
+        border-radius: 14px;
+        background: rgba(240,169,163,0.18);
+        color: #8a3a33;
+        font-weight: 700;
+        font-size: 0.84rem;
+      }
+
+      .mobile-nav {
+        display: none;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 18px 14px 110px;
+        }
+
+        .desktop-shell {
+          display: block;
+          width: min(100%, 430px);
+        }
+
+        .sidebar {
+          display: none;
+        }
+
+        .main-panel {
+          width: 100%;
+        }
+
+        .settings-panel {
+          min-height: 680px;
+          border-radius: 36px;
+        }
+
+        .settings-row {
+          flex-wrap: wrap;
+        }
+
+        .mobile-nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          width: min(92vw, 360px);
+          position: fixed;
+          left: 50%;
+          bottom: 18px;
+          transform: translateX(-50%);
+          padding: 8px 10px;
+          border-radius: 24px;
+          background: rgba(255,255,255,0.18);
+          border: 1px solid rgba(255,255,255,0.26);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          box-shadow: 0 16px 30px rgba(15,23,42,0.12);
+          z-index: 30;
+        }
+
+        .mobile-nav button {
+          border: 0;
+          background: transparent;
+          color: var(--muted);
+          border-radius: 16px;
+          padding: 10px 8px 8px;
+          display: grid;
+          place-items: center;
+          gap: 4px;
+          font-size: 0.78rem;
+          font-weight: 600;
+        }
+
+        .mobile-nav button.active {
+          background: rgba(255,255,255,0.38);
+          color: var(--soft);
+        }
+
+        .mobile-nav .icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 22px;
+          font-size: 0.96rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desktop-shell">
+      <aside class="sidebar" aria-label="Sidebar navigation">
+        <div class="brand" aria-label="On-demand brand">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="../../assets/brand-mark.svg" alt="On-Demand" />
+          </span>
+          <span>on-demand</span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <button type="button" onClick="window.location.href='customerHome.html'">Home</button>
+          <button type="button" onClick="window.location.href='customerHistory.html'">History</button>
+          <button type="button" class="active" onClick="window.location.href='customerSettings.html'">Settings</button>
+        </nav>
+
+        <div class="side-card">
+          <small>Signed in as</small>
+          <strong>Kel A.</strong>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <section class="settings-panel" aria-label="Settings">
+          <div class="settings-head">
+            <h1>Settings</h1>
+            <span>Manage your account</span>
+          </div>
+
+          <div class="settings-scroll">
+            <!-- Account -->
+            <div class="settings-group">
+              <p class="group-label">Account</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Profile</strong>
+                    <small>Name, photo, and bio</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Email address</strong>
+                    <small>kel.a@email.com</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Phone number</strong>
+                    <small>+234 &middot;&middot;&middot; &middot;&middot; 12</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Password &amp; login</strong>
+                    <small>Change your password</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Payment methods</strong>
+                    <small>Cards and wallets</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Saved addresses</strong>
+                    <small>Home, work, and other places</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Linked accounts</strong>
+                    <small>Google, Apple, Facebook</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row row-danger">
+                  <div class="settings-row-copy">
+                    <strong>Delete account</strong>
+                    <small>Permanently remove your account and data</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accessibility -->
+            <div class="settings-group">
+              <p class="group-label">Accessibility</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Text size</strong>
+                    <small>Adjust reading size across the app</small>
+                  </div>
+                  <div class="segmented" role="group" aria-label="Text size">
+                    <button type="button">S</button>
+                    <button type="button" class="active">M</button>
+                    <button type="button">L</button>
+                    <button type="button">XL</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Dark mode</strong>
+                    <small>Choose how On-Demand looks</small>
+                  </div>
+                  <div class="segmented" role="group" aria-label="Dark mode">
+                    <button type="button">Light</button>
+                    <button type="button" class="active">System</button>
+                    <button type="button">Dark</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Sound effects</strong>
+                    <small>Play sounds for actions and alerts</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Voice guidance</strong>
+                    <small>Read key updates aloud</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Notifications -->
+            <div class="settings-group">
+              <p class="group-label">Notifications</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Push notifications</strong>
+                    <small>Allow On-Demand to send alerts</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row settings-subrow">
+                  <div class="settings-row-copy">
+                    <strong>Service updates</strong>
+                    <small>Provider en route, arrival, and completion</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row settings-subrow">
+                  <div class="settings-row-copy">
+                    <strong>Promotions &amp; offers</strong>
+                    <small>Discounts and seasonal deals</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row settings-subrow">
+                  <div class="settings-row-copy">
+                    <strong>Chat messages</strong>
+                    <small>New messages from your provider</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Email notifications</strong>
+                    <small>Receipts and account emails</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row settings-subrow">
+                  <div class="settings-row-copy">
+                    <strong>Newsletter</strong>
+                    <small>Tips and product news</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>SMS notifications</strong>
+                    <small>Text alerts for service status</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Privacy & Security -->
+            <div class="settings-group">
+              <p class="group-label">Privacy &amp; security</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Two-factor authentication</strong>
+                    <small>Add an extra step when signing in</small>
+                  </div>
+                  <div class="row-right">
+                    <span class="row-value">Off</span>
+                    <span class="chevron">&rsaquo;</span>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>App lock</strong>
+                    <small>Require a PIN or biometrics to open the app</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+                <div class="settings-row settings-subrow">
+                  <div class="settings-row-copy">
+                    <strong>Lock method</strong>
+                    <small>PIN, Face ID, or fingerprint</small>
+                  </div>
+                  <div class="row-right">
+                    <span class="row-value">Face ID</span>
+                    <span class="chevron">&rsaquo;</span>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Data &amp; privacy</strong>
+                    <small>Manage what you share with On-Demand</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+              </div>
+
+              <div class="session-list">
+                <p class="settings-subheading">Active sessions</p>
+                <div class="session-item">
+                  <div class="session-copy">
+                    <strong>iPhone 14 &mdash; Abuja, Nigeria</strong>
+                    <small>This device &middot; Active now</small>
+                  </div>
+                  <span class="badge-current">Current</span>
+                </div>
+                <div class="session-item">
+                  <div class="session-copy">
+                    <strong>Chrome on Windows &mdash; Lagos, Nigeria</strong>
+                    <small>Last active 2 days ago</small>
+                  </div>
+                  <button class="signout-btn" onClick="window.location.href='../../index.html'" type="button">Sign out</button>
+                </div>
+                <div class="session-item">
+                  <div class="session-copy">
+                    <strong>iPad &mdash; Abuja, Nigeria</strong>
+                    <small>Last active 1 week ago</small>
+                  </div>
+                  <button class="signout-btn" onClick="window.location.href='../../index.html'" type="button">Sign out</button>
+                </div>
+                <button class="signout-all" onClick="window.location.href='../../index.html'" type="button">Sign out of all other sessions</button>
+              </div>
+            </div>
+
+            <!-- Appearance -->
+            <div class="settings-group">
+              <p class="group-label">Appearance</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Theme</strong>
+                    <small>Match system, or set light/dark manually</small>
+                  </div>
+                  <div class="segmented" role="group" aria-label="Theme">
+                    <button type="button">Light</button>
+                    <button type="button" class="active">System</button>
+                    <button type="button">Dark</button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Accent color</strong>
+                    <small>Personalize buttons and highlights</small>
+                  </div>
+                  <div class="swatches" role="group" aria-label="Accent color">
+                    <button type="button" class="swatch active" style="background:#3ea0ff" aria-label="Blue"></button>
+                    <button type="button" class="swatch" style="background:#9bd9b0" aria-label="Green"></button>
+                    <button type="button" class="swatch" style="background:#b8abff" aria-label="Purple"></button>
+                    <button type="button" class="swatch" style="background:#f0a9a3" aria-label="Red"></button>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>App icon</strong>
+                    <small>Choose a home screen icon</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Default home view</strong>
+                    <small>What opens first on Home</small>
+                  </div>
+                  <div class="segmented" role="group" aria-label="Default home view">
+                    <button type="button" class="active">Map</button>
+                    <button type="button">List</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Preferences & General -->
+            <div class="settings-group">
+              <p class="group-label">Preferences &amp; general</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Language</strong>
+                    <small>App display language</small>
+                  </div>
+                  <div class="row-right">
+                    <span class="row-value">English</span>
+                    <span class="chevron">&rsaquo;</span>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Currency</strong>
+                    <small>Used for pricing and receipts</small>
+                  </div>
+                  <div class="row-right">
+                    <span class="row-value">NGN (&#8358;)</span>
+                    <span class="chevron">&rsaquo;</span>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Distance units</strong>
+                    <small>Shown on the map and in requests</small>
+                  </div>
+                  <div class="row-right">
+                    <span class="row-value">Kilometers</span>
+                    <span class="chevron">&rsaquo;</span>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Saved locations</strong>
+                    <small>Home, work, and other addresses</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Auto-detect location</strong>
+                    <small>Update your position in the background</small>
+                  </div>
+                  <label class="toggle">
+                    <input type="checkbox" checked />
+                    <span class="track"></span>
+                    <span class="thumb"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="settings-group">
+              <p class="group-label">Help &amp; support</p>
+              <div class="settings-list">
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Help center</strong>
+                    <small>Browse FAQs and guides</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Contact support</strong>
+                    <small>Chat with our team</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Report a problem</strong>
+                    <small>Flag a bug or a bad experience</small>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Terms of service</strong>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>Privacy policy</strong>
+                  </div>
+                  <span class="chevron">&rsaquo;</span>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-row-copy">
+                    <strong>App version</strong>
+                    <small>On-Demand for Customers</small>
+                  </div>
+                  <span class="row-value">2.4.1</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button type="button" onClick="window.location.href='customerHome.html'"><span class="icon">&#8962;</span><span>Home</span></button>
+      <button type="button" onClick="window.location.href='customerHistory.html'"><span class="icon">&#8635;</span><span>History</span></button>
+      <button type="button" class="active" onClick="window.location.href='customerSettings.html'"><span class="icon">&#9881;</span><span>Settings</span></button>
+    </nav>
+  </body>
+</html>

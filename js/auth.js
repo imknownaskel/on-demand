@@ -4,6 +4,29 @@ document.addEventListener('DOMContentLoaded', function () {
   const forms = document.querySelectorAll('.auth-form');
   const screens = document.querySelectorAll('.auth-screen');
   const optionButtons = document.querySelectorAll('.auth-option');
+  function redirectToCustomerHome() {
+    window.location.href = 'TA/customer/customerHome.html';
+  }
+
+  function hasCustomerFormFields(form) {
+    if (!form) return false;
+
+    const nameField = form.querySelector('input[name="fullName"]');
+    const emailField = form.querySelector('input[type="email"]');
+    const passwordField = form.querySelector('input[name="password"]');
+    const confirmPasswordField = form.querySelector('input[name="confirmPassword"]');
+
+    const hasName = nameField && nameField.value.trim().length > 0;
+    const hasEmail = emailField && emailField.value.trim().length > 0 && emailField.validity.valid;
+    const hasPassword = passwordField && passwordField.value.trim().length >= 6;
+    const hasConfirmPassword = confirmPasswordField && confirmPasswordField.value === passwordField?.value;
+
+    return hasName && hasEmail && hasPassword && hasConfirmPassword;
+  }
+
+  function unlockCustomerSuccessScreen() {
+    redirectToCustomerHome();
+  }
 
   function setVisibleCollection(collection, visibleId) {
     collection.forEach(function (element) {
@@ -98,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (role === 'customer' && (action === 'google' || action === 'apple')) {
-        showScreen('customer-success-screen');
+        unlockCustomerSuccessScreen();
         return;
       }
 
@@ -109,6 +132,17 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('[data-next-screen]').forEach(function (button) {
     button.addEventListener('click', function () {
       const screenId = this.dataset.nextScreen;
+      const selectedRole = document.querySelector('.btn-select[data-kind="category"].is-selected');
+      const isCustomer = selectedRole && selectedRole.dataset.role === 'customer';
+
+      if (screenId === 'verification-screen' && isCustomer) {
+        const form = document.getElementById('customer-email-form');
+        if (form && hasCustomerFormFields(form)) {
+          unlockCustomerSuccessScreen();
+          return;
+        }
+      }
+
       if (screenId) {
         showScreen(screenId);
       }
@@ -119,9 +153,31 @@ document.addEventListener('DOMContentLoaded', function () {
     button.addEventListener('click', function () {
       const selectedRole = document.querySelector('.btn-select[data-kind="category"].is-selected');
       const isProvider = selectedRole && selectedRole.dataset.role === 'provider';
-      showScreen(isProvider ? 'provider-processing-screen' : 'customer-success-screen');
+      if (isProvider) {
+        showScreen('provider-processing-screen');
+        return;
+      }
+      unlockCustomerSuccessScreen();
     });
   });
+
+  const customerLoginForm = document.getElementById('customer-login');
+  if (customerLoginForm) {
+    customerLoginForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      unlockCustomerSuccessScreen();
+    });
+  }
+
+  const customerSignupForm = document.getElementById('customer-email-form');
+  if (customerSignupForm) {
+    customerSignupForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      if (hasCustomerFormFields(customerSignupForm)) {
+        unlockCustomerSuccessScreen();
+      }
+    });
+  }
 
   document.querySelectorAll('.toggle-password').forEach(function (button) {
     button.addEventListener('click', function () {

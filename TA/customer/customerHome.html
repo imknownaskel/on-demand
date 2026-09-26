@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>On-Demand Home</title>
+    <meta
+      name="description"
+      content="Expanded customer dashboard with glassmorphism cards and responsive map background."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../assets/brand-mark.svg" />
+    <link rel="apple-touch-icon" href="../../assets/brand-mark.svg" />
+    <link rel="stylesheet" href="../../css/base.css" />
+    <style>
+      :root {
+        --page-bg: #e9e5df;
+        --panel-bg: rgba(255, 255, 255, 0.18);
+        --panel-border: rgba(255, 255, 255, 0.3);
+        --soft: #111827;
+        --soft-2: rgba(17, 24, 39, 0.72);
+        --muted: rgba(17, 24, 39, 0.6);
+        --shadow: rgba(15, 23, 42, 0.12);
+        --accent: #69c4ff;
+        --accent-strong: #3ea0ff;
+        --green: #9bd9b0;
+        --purple: #b8abff;
+        --white: #ffffff;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        font-family: var(--font-body);
+        background: var(--page-bg);
+        color: var(--soft);
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 28px 24px 40px;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .desktop-shell {
+        width: min(1220px, 100%);
+        min-height: 760px;
+        display: flex;
+        gap: 24px;
+      }
+
+      .sidebar {
+        width: 280px;
+        min-width: 280px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid var(--panel-border);
+        border-radius: 34px;
+        padding: 18px 18px 20px;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        box-shadow: 0 20px 38px rgba(15,23,42,0.08);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 8px 18px;
+        font-family: var(--font-head);
+        font-weight: 800;
+        font-size: clamp(1.5rem, 2vw, 2rem);
+        letter-spacing: -0.06em;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+      }
+
+      .brand-mark img {
+        width: 100%;
+        height: 100%;
+        display: block;
+      }
+
+      .sidebar-nav {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .sidebar-nav button {
+        border: 0;
+        text-align: left;
+        padding: 14px 16px;
+        border-radius: 18px;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 600;
+        transition: 0.2s ease;
+      }
+
+      .sidebar-nav button.active {
+        background: rgba(255,255,255,0.34);
+        color: var(--soft);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+      }
+
+      .sidebar-nav button:hover {
+        background: rgba(255,255,255,0.14);
+        color: var(--soft);
+      }
+
+      .side-card {
+        margin-top: auto;
+        background: rgba(255,255,255,0.12);
+        border: 1px solid rgba(255,255,255,0.22);
+        border-radius: 22px;
+        padding: 16px;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+
+      .side-card small {
+        display: block;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        font-size: 0.68rem;
+      }
+
+      .side-card strong {
+        display: block;
+        margin-top: 10px;
+        font-size: 1.2rem;
+        font-family: var(--font-head);
+        letter-spacing: -0.05em;
+      }
+
+      .main-panel {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .map-stage {
+        position: relative;
+        flex: 1;
+        min-height: 540px;
+        border-radius: 34px;
+        overflow: hidden;
+        border: 1px solid var(--panel-border);
+        background: rgba(255,255,255,0.12);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        box-shadow: 0 20px 40px rgba(15,23,42,0.08);
+      }
+
+      .map-stage::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.24));
+        z-index: 1;
+      }
+
+      .map-iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        filter: grayscale(1) contrast(1.1) brightness(1.05);
+        opacity: 0.9;
+      }
+
+      .request-btn {
+        position: absolute;
+        left: 50%;
+        bottom: 138px;
+        transform: translateX(-50%);
+        padding: 18px 28px;
+        min-width: 190px;
+        border: 1px solid rgba(255,255,255,0.35);
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+        color: var(--soft);
+        font-family: var(--font-head);
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.7),
+          inset 0 -14px 26px rgba(255,255,255,0.18),
+          0 18px 34px rgba(15, 23, 42, 0.18);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 2;
+      }
+
+      .request-btn::before {
+        content: "";
+        position: absolute;
+        inset: 2px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04));
+      }
+
+      .request-btn span {
+        position: relative;
+        z-index: 1;
+      }
+
+      .recent-card {
+        width: min(100%, 390px);
+        position: relative;
+        z-index: 2;
+        margin: -22px auto 0;
+        padding: 18px 18px 12px;
+        border-radius: 30px;
+        background: rgba(255,255,255,0.16);
+        border: 1px solid rgba(255,255,255,0.28);
+        box-shadow: 0 20px 36px rgba(15,23,42,0.12);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      .recent-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+
+      .recent-head h3 {
+        margin: 0;
+        font-family: var(--font-head);
+        font-size: 1.12rem;
+        letter-spacing: -0.04em;
+      }
+
+      .recent-head span {
+        color: var(--muted);
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .service-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .service-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 10px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.11);
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+
+      .service-copy {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent-strong);
+        box-shadow: 0 0 0 4px rgba(105,196,255,0.14);
+      }
+
+      .dot.green { background: var(--green); box-shadow: 0 0 0 4px rgba(155,217,176,0.14); }
+      .dot.purple { background: var(--purple); box-shadow: 0 0 0 4px rgba(184,171,255,0.18); }
+
+      .service-copy strong {
+        display: block;
+        font-family: var(--font-head);
+        font-size: 0.96rem;
+        letter-spacing: -0.04em;
+      }
+
+      .service-copy small {
+        display: block;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+
+      .price {
+        font-family: var(--font-head);
+        font-size: 0.94rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      .mobile-nav {
+        display: none;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 18px 14px 110px;
+        }
+
+        .desktop-shell {
+          display: block;
+          width: min(100%, 430px);
+        }
+
+        .sidebar {
+          display: none;
+        }
+
+        .main-panel {
+          width: 100%;
+        }
+
+        .map-stage {
+          min-height: 680px;
+          border-radius: 36px;
+        }
+
+        .request-btn {
+          bottom: 174px;
+        }
+
+        .recent-card {
+          width: min(100%, 350px);
+        }
+
+        .mobile-nav {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 8px;
+          width: min(92vw, 360px);
+          position: fixed;
+          left: 50%;
+          bottom: 18px;
+          transform: translateX(-50%);
+          padding: 8px 10px;
+          border-radius: 24px;
+          background: rgba(255,255,255,0.18);
+          border: 1px solid rgba(255,255,255,0.26);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          box-shadow: 0 16px 30px rgba(15,23,42,0.12);
+          z-index: 30;
+        }
+
+        .mobile-nav button {
+          border: 0;
+          background: transparent;
+          color: var(--muted);
+          border-radius: 16px;
+          padding: 10px 8px 8px;
+          display: grid;
+          place-items: center;
+          gap: 4px;
+          font-size: 0.78rem;
+          font-weight: 600;
+        }
+
+        .mobile-nav button.active {
+          background: rgba(255,255,255,0.38);
+          color: var(--soft);
+        }
+
+        .mobile-nav .icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 22px;
+          font-size: 0.96rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="desktop-shell">
+      <aside class="sidebar" aria-label="Sidebar navigation">
+        <div class="brand" aria-label="On-demand brand">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="../../assets/brand-mark.svg" alt="On-Demand" />
+          </span>
+          <span>on-demand</span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Main navigation">
+          <button type="button" onClick="window.location.href='customerHome.html'" class="active">Home</button>
+          <button type="button" onClick="window.location.href='customerHistory.html'">History</button>
+          <button type="button" onClick="window.location.href='customerSettings.html'">Settings</button>
+        </nav>
+
+        <div class="side-card">
+          <small>Current status</small>
+          <strong>Service live</strong>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <div class="map-stage" aria-label="Map background container">
+          <iframe
+            class="map-iframe"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=7.35%2C9.03%2C7.45%2C9.13&amp;layer=mapnik&amp;marker=9.0765%2C7.3986"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Map background"
+          ></iframe>
+
+          <button class="request-btn" type="button"><span>Request service</span></button>
+        </div>
+
+        <aside class="recent-card" aria-label="Recent services">
+          <div class="recent-head">
+            <h3>Recent services</h3>
+            <span>Today</span>
+          </div>
+
+          <div class="service-list">
+            <div class="service-item">
+              <div class="service-copy">
+                <span class="dot"></span>
+                <div>
+                  <strong>Plumbing</strong>
+                  <small>12 min ago</small>
+                </div>
+              </div>
+              <div class="price">$32</div>
+            </div>
+
+            <div class="service-item">
+              <div class="service-copy">
+                <span class="dot green"></span>
+                <div>
+                  <strong>Electrical</strong>
+                  <small>1 hr ago</small>
+                </div>
+              </div>
+              <div class="price">$64</div>
+            </div>
+
+            <div class="service-item">
+              <div class="service-copy">
+                <span class="dot purple"></span>
+                <div>
+                  <strong>Cleaning</strong>
+                  <small>2 hrs ago</small>
+                </div>
+              </div>
+              <div class="price">$48</div>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+      <button type="button" class="active" onClick="window.location.href='customerHome.html'"><span class="icon">&#8962;</span><span>Home</span></button>
+      <button type="button" onClick="window.location.href='customerHistory.html'"><span class="icon">&#8635;</span><span>History</span></button>
+      <button type="button" onClick="window.location.href='customerSettings.html'"><span class="icon">&#9881;</span><span>Settings</span></button>
+    </nav>
+  </body>
+</html>
