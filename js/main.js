@@ -63,6 +63,15 @@ const quoteTotal = document.getElementById('quoteTotal');
 const agreeBtn = document.getElementById('agreeQuoteBtn');
 const renegotiateBtn = document.getElementById('renegotiateBtn');
 const conversationBox = document.querySelector('.conversation');
+const demoMessageForm = document.getElementById('demoMessageForm');
+const demoMessageInput = document.getElementById('demoMessageInput');
+const demoPhotoInput = document.getElementById('demoPhotoInput');
+const demoInvoiceForm = document.getElementById('demoInvoiceForm');
+let pendingInvoiceLines = null;
+
+function formatNaira(amount) {
+  return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(amount);
+}
 
 if (problemInput) {
   document.querySelectorAll('.chip').forEach(function (chip) {
@@ -89,7 +98,7 @@ function addOutgoingMessage(message) {
 }
 
 function renderInvoice() {
-  const invoiceLines = [
+  const invoiceLines = pendingInvoiceLines || [
     ['Transport', 1000],
     ['Workmanship', 2000],
     ['New drain pipe', 2000],
@@ -109,13 +118,17 @@ function renderInvoice() {
     quoteLines.innerHTML = '';
     invoiceLines.forEach(function (line) {
       const li = document.createElement('li');
-      li.innerHTML = '<span>' + line[0] + '</span><span>NGN' + line[1] + '</span>';
+      const label = document.createElement('span');
+      label.textContent = line[0];
+      const price = document.createElement('span');
+      price.textContent = formatNaira(line[1]);
+      li.replaceChildren(label, price);
       quoteLines.appendChild(li);
     });
   }
 
   if (quoteTotal) {
-    quoteTotal.textContent = 'NGN' + total;
+    quoteTotal.textContent = formatNaira(total);
   }
 
   if (resultBox) {
@@ -147,4 +160,54 @@ if (renegotiateBtn) {
 
 if (priceBtn) {
   priceBtn.addEventListener('click', renderInvoice);
+}
+
+if (demoMessageForm) {
+  demoMessageForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const message = demoMessageInput.value.trim();
+    if (!message) return;
+    addOutgoingMessage(message);
+    demoMessageInput.value = '';
+  });
+}
+
+if (demoPhotoInput) {
+  demoPhotoInput.addEventListener('change', function () {
+    const file = demoPhotoInput.files && demoPhotoInput.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    if (file.size > 1500000) {
+      demoPhotoInput.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.addEventListener('load', function () {
+      if (!conversationBox) return;
+      const row = document.createElement('div');
+      row.className = 'msg-row outgoing';
+      const image = document.createElement('img');
+      image.className = 'demo-photo';
+      image.src = reader.result;
+      image.alt = 'Photo attachment';
+      row.appendChild(image);
+      conversationBox.appendChild(row);
+      conversationBox.scrollTop = conversationBox.scrollHeight;
+      demoPhotoInput.value = '';
+    });
+    reader.readAsDataURL(file);
+  });
+}
+
+if (demoInvoiceForm) {
+  demoInvoiceForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+    const description = document.getElementById('demoInvoiceDescription').value.trim();
+    const amount = Number(document.getElementById('demoInvoiceAmount').value);
+    if (!description || !Number.isSafeInteger(amount) || amount <= 0) return;
+    pendingInvoiceLines = [[description, amount]];
+    addOutgoingMessage(`Invoice sent: ${description} · ${formatNaira(amount)}`);
+    demoInvoiceForm.reset();
+    priceBtn.hidden = false;
+    renderInvoice();
+  });
 }

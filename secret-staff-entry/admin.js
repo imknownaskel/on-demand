@@ -122,6 +122,93 @@
     window.location.replace('portal.html');
   }
 
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('portalSidebar');
+  const screenTitle = document.getElementById('screenTitle');
+  const navItems = document.querySelectorAll('.nav-item[data-view]');
+  const viewPanes = document.querySelectorAll('.view-pane');
+
+  function selectView(viewName) {
+    const activeItem = document.querySelector(`.nav-item[data-view="${viewName}"]`);
+    if (!activeItem) return;
+    navItems.forEach((item) => item.classList.toggle('active', item === activeItem));
+    viewPanes.forEach((pane) => { pane.hidden = pane.id !== `view-${viewName}`; });
+    screenTitle.textContent = document.getElementById(`view-${viewName}`).dataset.title;
+    sidebar.classList.remove('is-open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open navigation menu');
+  }
+
+  navItems.forEach((item) => item.addEventListener('click', () => selectView(item.dataset.view)));
+
+  if (menuToggle && sidebar) {
+    menuToggle.addEventListener('click', () => {
+      const isOpen = sidebar.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+    });
+  }
+
+  function renderRequestSummary() {
+    const activity = document.getElementById('requestActivity');
+    if (!activity) return;
+    let requests = [];
+    try {
+      const stored = JSON.parse(localStorage.getItem('onDemandServiceRequests') || '[]');
+      requests = Array.isArray(stored) ? stored : [];
+    } catch (error) {
+      requests = [];
+    }
+    const counts = requests.reduce((result, request) => {
+      result[request.status] = (result[request.status] || 0) + 1;
+      return result;
+    }, {});
+    document.getElementById('requestPending').textContent = counts.pending || 0;
+    document.getElementById('requestMatched').textContent = counts.matched || 0;
+    document.getElementById('requestDeclined').textContent = counts.declined || 0;
+    document.getElementById('requestTotal').textContent = requests.length;
+    activity.replaceChildren();
+    requests.slice(0, 6).forEach((request) => {
+      const row = document.createElement('li');
+      const label = document.createElement('strong');
+      label.textContent = request.serviceLabel || 'Service request';
+      const status = document.createElement('span');
+      status.textContent = request.status;
+      row.append(label, status);
+      activity.appendChild(row);
+    });
+    if (!requests.length) {
+      const row = document.createElement('li');
+      row.textContent = 'No requests recorded yet.';
+      activity.appendChild(row);
+    }
+  }
+
+  const settingsForm = document.getElementById('settingsForm');
+  if (settingsForm) {
+    const settingsKey = 'onDemandAdminPreferences';
+    try {
+      const preferences = JSON.parse(localStorage.getItem(settingsKey) || '{}');
+      document.getElementById('notifyMatches').checked = Boolean(preferences.notifyMatches);
+      document.getElementById('notifyReports').checked = Boolean(preferences.notifyReports);
+    } catch (error) {
+      // Keep default preferences when stored settings are invalid.
+    }
+    settingsForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      localStorage.setItem(settingsKey, JSON.stringify({
+        notifyMatches: document.getElementById('notifyMatches').checked,
+        notifyReports: document.getElementById('notifyReports').checked
+      }));
+      document.getElementById('settingsStatus').textContent = 'Preferences saved.';
+    });
+  }
+
+  if (navItems.length) selectView('overview');
+  renderRequestSummary();
+  window.addEventListener('storage', renderRequestSummary);
+  window.setInterval(renderRequestSummary, 2500);
+
   if (document.body.classList.contains('portal-locked') && !getStoredAdminToken()) {
     window.location.replace('index.html');
   }

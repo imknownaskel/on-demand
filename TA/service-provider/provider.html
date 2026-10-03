@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service requests | On-Demand</title>
+  <link rel="stylesheet" href="provider.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../index.html"><span class="brand-mark">OD</span><span>on-demand <small>PRO NETWORK</small></span></a>
+    <span class="availability"><i></i> Available for work</span>
+  </header>
+  <main class="page-shell">
+    <section class="page-heading">
+      <div><p class="eyebrow">Service provider workspace</p><h1>Incoming requests</h1><p>Review the location and service details, then choose whether to take the job.</p></div>
+      <a class="text-link" href="../../index.html">Back to site</a>
+    </section>
+    <section class="request-toolbar" aria-label="Request filters">
+      <div class="filter-tabs" role="group" aria-label="Filter requests">
+        <button class="filter-tab is-active" type="button" data-filter="all">All <span id="allCount">0</span></button>
+        <button class="filter-tab" type="button" data-filter="pending">Pending <span id="pendingCount">0</span></button>
+        <button class="filter-tab" type="button" data-filter="matched">Matched <span id="matchedCount">0</span></button>
+      </div>
+      <button class="icon-button" id="refreshRequests" type="button" title="Refresh requests" aria-label="Refresh requests">&#8635;</button>
+    </section>
+    <section class="request-list" id="requestList" aria-live="polite"></section>
+    <p class="empty-state" id="emptyState" hidden>No service requests yet. New customer requests will appear here.</p>
+  </main>
+  <div class="modal-backdrop" id="matchModal" role="dialog" aria-modal="true" aria-labelledby="matchTitle" hidden>
+    <section class="match-dialog">
+      <button class="icon-button close-button" id="closeMatch" type="button" aria-label="Close">&times;</button>
+      <p class="eyebrow">Match confirmed</p><h2 id="matchTitle">You’ve accepted this request</h2>
+      <p id="matchCopy">You can now coordinate directly with the customer.</p>
+      <a class="primary-link" id="proOpenChat" href="chat.html">Open chat</a>
+    </section>
+  </div>
+  <script src="provider.js"></script>
+</body>
+</html>

@@ -225,15 +225,22 @@
       .recent-card {
         width: min(100%, 390px);
         position: relative;
-        z-index: 2;
-        margin: -22px auto 0;
+        z-index: 5;
+        margin: -76px auto 0;
         padding: 18px 18px 12px;
         border-radius: 30px;
-        background: rgba(255,255,255,0.16);
-        border: 1px solid rgba(255,255,255,0.28);
-        box-shadow: 0 20px 36px rgba(15,23,42,0.12);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
+        background: rgba(255,255,255,0.78);
+        border: 1px solid rgba(255,255,255,0.88);
+        box-shadow: 0 24px 46px rgba(15,23,42,0.2), 0 6px 16px rgba(15,23,42,0.08);
+        backdrop-filter: blur(22px);
+        -webkit-backdrop-filter: blur(22px);
+        transform: translateY(0);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+      }
+
+      .recent-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 28px 54px rgba(15,23,42,0.24), 0 8px 18px rgba(15,23,42,0.1);
       }
 
       .recent-head {
@@ -315,6 +322,162 @@
         display: none;
       }
 
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background: rgba(15, 23, 42, 0.28);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.22s ease, visibility 0.22s ease;
+        z-index: 50;
+      }
+
+      .modal-backdrop.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .request-modal {
+        width: min(100%, 470px);
+        max-height: min(720px, calc(100vh - 40px));
+        overflow: auto;
+        padding: 26px;
+        border: 1px solid rgba(255,255,255,0.78);
+        border-radius: 30px;
+        background: rgba(249, 251, 255, 0.92);
+        box-shadow: 0 28px 70px rgba(15,23,42,0.25);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        transform: translateY(14px) scale(0.98);
+        transition: transform 0.22s ease;
+      }
+
+      .modal-backdrop.is-open .request-modal {
+        transform: translateY(0) scale(1);
+      }
+
+      .modal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      .modal-header h2 {
+        margin: 0;
+        font-family: var(--font-head);
+        font-size: clamp(1.65rem, 4vw, 2rem);
+        letter-spacing: -0.06em;
+      }
+
+      .modal-header p {
+        margin: 7px 0 0;
+        color: var(--muted);
+        line-height: 1.45;
+        font-size: 0.9rem;
+      }
+
+      .close-modal {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 auto;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(17,24,39,0.08);
+        color: var(--soft);
+        font-size: 1.35rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .request-form {
+        display: grid;
+        gap: 18px;
+      }
+
+      .field-label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--soft);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .location-wrap {
+        position: relative;
+      }
+
+      .location-input,
+      .service-select {
+        width: 100%;
+        min-height: 52px;
+        border: 1px solid rgba(17,24,39,0.12);
+        border-radius: 16px;
+        padding: 0 16px;
+        background: rgba(255,255,255,0.72);
+        color: var(--soft);
+        outline: 0;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .location-input:focus,
+      .service-select:focus {
+        border-color: var(--accent-strong);
+        box-shadow: 0 0 0 4px rgba(62,160,255,0.14);
+      }
+
+      .live-location {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 10px;
+        border: 0;
+        padding: 0;
+        background: transparent;
+        color: #2677cb;
+        font-size: 0.82rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .live-location:hover {
+        color: #15579a;
+      }
+
+      .find-match {
+        width: 100%;
+        min-height: 54px;
+        margin-top: 4px;
+        border: 0;
+        border-radius: 17px;
+        background: linear-gradient(135deg, #2fc27a, #1cab69);
+        color: var(--white);
+        font-family: var(--font-head);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(28,172,105,0.22);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .find-match:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 28px rgba(28,172,105,0.3);
+      }
+
+      .form-status {
+        min-height: 1.1em;
+        margin: -4px 0 0;
+        color: #23724c;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+
       @media (max-width: 640px) {
         body {
           padding: 18px 14px 110px;
@@ -344,6 +507,12 @@
 
         .recent-card {
           width: min(100%, 350px);
+          margin-top: -62px;
+        }
+
+        .request-modal {
+          padding: 22px;
+          border-radius: 26px;
         }
 
         .mobile-nav {
@@ -427,7 +596,7 @@
             title="Map background"
           ></iframe>
 
-          <button class="request-btn" type="button"><span>Request service</span></button>
+          <button class="request-btn" id="requestServiceButton" type="button" aria-haspopup="dialog" aria-controls="requestModal"><span>Request service</span></button>
         </div>
 
         <aside class="recent-card" aria-label="Recent services">
@@ -445,7 +614,7 @@
                   <small>12 min ago</small>
                 </div>
               </div>
-              <div class="price">$32</div>
+              <div class="price">NGN 32,000</div>
             </div>
 
             <div class="service-item">
@@ -456,7 +625,7 @@
                   <small>1 hr ago</small>
                 </div>
               </div>
-              <div class="price">$64</div>
+              <div class="price">NGN 64,000</div>
             </div>
 
             <div class="service-item">
@@ -467,7 +636,7 @@
                   <small>2 hrs ago</small>
                 </div>
               </div>
-              <div class="price">$48</div>
+              <div class="price">NGN 48,000</div>
             </div>
           </div>
         </aside>
@@ -479,5 +648,160 @@
       <button type="button" onClick="window.location.href='customerHistory.html'"><span class="icon">&#8635;</span><span>History</span></button>
       <button type="button" onClick="window.location.href='customerSettings.html'"><span class="icon">&#9881;</span><span>Settings</span></button>
     </nav>
+
+    <div class="modal-backdrop" id="requestModal" role="dialog" aria-modal="true" aria-labelledby="requestModalTitle">
+      <section class="request-modal">
+        <div class="modal-header">
+          <div>
+            <h2 id="requestModalTitle">Request a service</h2>
+            <p>Tell us what you need and we’ll find the right provider nearby.</p>
+          </div>
+          <button class="close-modal" id="closeRequestModal" type="button" aria-label="Close request form">&times;</button>
+        </div>
+
+        <form class="request-form" id="requestForm">
+          <div>
+            <label class="field-label" for="serviceLocation">Where do you need help?</label>
+            <div class="location-wrap">
+              <input class="location-input" id="serviceLocation" name="location" type="text" placeholder="Enter an address or landmark" autocomplete="street-address" required />
+            </div>
+            <button class="live-location" id="useLiveLocation" type="button" aria-label="Use current device location">&#9678; Use live location</button>
+          </div>
+
+          <div>
+            <label class="field-label" for="serviceType">What service do you need?</label>
+            <select class="service-select" id="serviceType" name="service" required>
+              <option value="" selected disabled>Select a service</option>
+              <option value="plumbing">Plumbing</option>
+              <option value="electrical">Electrical</option>
+              <option value="cleaning">Cleaning</option>
+              <option value="moving">Moving &amp; lifting</option>
+              <option value="repairs">General repairs</option>
+            </select>
+          </div>
+
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          <button class="find-match" type="submit">Find match</button>
+        </form>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="matchModal" role="dialog" aria-modal="true" aria-labelledby="matchModalTitle">
+      <section class="request-modal">
+        <div class="modal-header">
+          <div>
+            <h2 id="matchModalTitle">You’re matched</h2>
+            <p id="matchDetails">A service pro accepted your request.</p>
+          </div>
+          <button class="close-modal" id="closeMatchModal" type="button" aria-label="Close match confirmation">&times;</button>
+        </div>
+        <a class="find-match" id="customerOpenChat" href="../../TA/service-provider/chat.html" style="display:grid;place-items:center;text-decoration:none">Open chat</a>
+      </section>
+    </div>
+
+    <script>
+      const requestButton = document.getElementById('requestServiceButton');
+      const requestModal = document.getElementById('requestModal');
+      const closeRequestModal = document.getElementById('closeRequestModal');
+      const requestForm = document.getElementById('requestForm');
+      const locationInput = document.getElementById('serviceLocation');
+      const liveLocationButton = document.getElementById('useLiveLocation');
+      const formStatus = document.getElementById('formStatus');
+      const matchModal = document.getElementById('matchModal');
+      const customerOpenChat = document.getElementById('customerOpenChat');
+      const matchDetails = document.getElementById('matchDetails');
+      const activeRequestKey = 'onDemandActiveRequestId';
+      const requestsKey = 'onDemandServiceRequests';
+      let notifiedMatchId = '';
+
+      function openRequestModal() {
+        requestModal.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        window.setTimeout(() => locationInput.focus(), 100);
+      }
+
+      function closeModal() {
+        requestModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+        requestButton.focus();
+      }
+
+      requestButton.addEventListener('click', openRequestModal);
+      closeRequestModal.addEventListener('click', closeModal);
+      document.getElementById('closeMatchModal').addEventListener('click', () => {
+        matchModal.classList.remove('is-open');
+        document.body.style.overflow = '';
+      });
+      requestModal.addEventListener('click', (event) => {
+        if (event.target === requestModal) closeModal();
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && requestModal.classList.contains('is-open')) closeModal();
+      });
+
+      liveLocationButton.addEventListener('click', () => {
+        formStatus.textContent = 'Requesting your location…';
+        if (!navigator.geolocation) {
+          formStatus.textContent = 'Live location is not available on this device.';
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          ({ coords }) => {
+            locationInput.value = `Live location (${coords.latitude.toFixed(4)}, ${coords.longitude.toFixed(4)})`;
+            formStatus.textContent = 'Live location added.';
+          },
+          () => {
+            formStatus.textContent = 'We couldn’t access your location. Enter it manually instead.';
+          }
+        );
+      });
+
+      requestForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const serviceField = document.getElementById('serviceType');
+        const request = {
+          id: `request-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          location: locationInput.value.trim(),
+          service: serviceField.value,
+          serviceLabel: serviceField.selectedOptions[0].text,
+          status: 'pending',
+          createdAt: new Date().toISOString()
+        };
+
+        try {
+          const requests = JSON.parse(localStorage.getItem(requestsKey) || '[]');
+          requests.unshift(request);
+          localStorage.setItem(requestsKey, JSON.stringify(requests));
+          localStorage.setItem(activeRequestKey, request.id);
+          formStatus.textContent = `Your ${request.serviceLabel.toLowerCase()} request has been sent to nearby providers.`;
+          requestForm.reset();
+        } catch (error) {
+          formStatus.textContent = 'We could not save your request. Please try again.';
+        }
+      });
+
+      function checkForMatch() {
+        const activeRequestId = localStorage.getItem(activeRequestKey);
+        if (!activeRequestId || activeRequestId === notifiedMatchId) return;
+
+        try {
+          const requests = JSON.parse(localStorage.getItem(requestsKey) || '[]');
+          const matchedRequest = requests.find((request) => request.id === activeRequestId && request.status === 'matched');
+          if (!matchedRequest) return;
+
+          notifiedMatchId = matchedRequest.id;
+          matchDetails.textContent = `${matchedRequest.proName || 'A service pro'} accepted your ${matchedRequest.serviceLabel.toLowerCase()} request.`;
+          customerOpenChat.href = `../../TA/service-provider/chat.html?requestId=${encodeURIComponent(matchedRequest.id)}&role=customer`;
+          matchModal.classList.add('is-open');
+          document.body.style.overflow = 'hidden';
+        } catch (error) {
+          return;
+        }
+      }
+
+      window.addEventListener('storage', checkForMatch);
+      window.setInterval(checkForMatch, 1500);
+      checkForMatch();
+    </script>
   </body>
 </html>

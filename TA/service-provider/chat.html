@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service chat | On-Demand</title>
+  <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+  <header class="chat-topbar"><a class="back-link" id="backLink" href="provider.html" aria-label="Back to requests">&#8592;</a><div class="person"><span class="avatar" id="chatAvatar">OD</span><div><strong id="chatTitle">Service conversation</strong><small id="chatSubtitle">Matched service request</small></div></div><span class="secure-label"><i></i> Matched</span></header>
+  <main class="chat-shell">
+    <section class="job-strip"><span class="eyebrow">Request details</span><strong id="jobService">Loading request</strong><span id="jobLocation"></span></section>
+    <section class="chat-window" id="chatMessages" aria-live="polite" aria-label="Messages"></section>
+    <form class="composer" id="messageForm">
+      <label class="icon-control" for="photoInput" title="Attach a photo" aria-label="Attach a photo">&#128247;</label>
+      <input id="photoInput" type="file" accept="image/*" capture="environment" hidden>
+      <textarea id="messageInput" rows="1" maxlength="1000" placeholder="Write a message" aria-label="Write a message"></textarea>
+      <button class="send-button" type="submit" aria-label="Send message">&#8593;</button>
+    </form>
+    <form class="invoice-composer" id="invoiceForm" hidden>
+      <span class="invoice-label">Send an invoice</span>
+      <input id="invoiceDescription" type="text" maxlength="120" placeholder="Work and materials" aria-label="Invoice description" required>
+      <label class="amount-field"><span>NGN</span><input id="invoiceAmount" type="number" min="1" step="1" placeholder="Amount" aria-label="Invoice amount" required></label>
+      <button type="submit">Attach invoice</button>
+    </form>
+    <p class="chat-notice" id="chatNotice" role="status" aria-live="polite"></p>
+  </main>
+  <div class="modal-backdrop" id="invoiceModal" role="dialog" aria-modal="true" aria-labelledby="invoiceModalTitle" hidden>
+    <section class="invoice-dialog"><button class="close-button" id="closeInvoice" type="button" aria-label="Close invoice">&times;</button><p class="eyebrow">On-Demand invoice</p><h2 id="invoiceModalTitle">Pricing invoice</h2><p class="invoice-description" id="invoiceModalDescription"></p><div class="invoice-total"><span>Total due</span><strong id="invoiceModalAmount"></strong></div><button class="primary-button" id="confirmInvoice" type="button">Acknowledge invoice</button></section>
+  </div>
+  <script src="chat.js"></script>
+</body>
+</html>

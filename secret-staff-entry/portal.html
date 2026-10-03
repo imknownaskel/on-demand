@@ -205,6 +205,37 @@
         text-decoration-color: white;
       }
 
+      .menu-toggle {
+        display: none;
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--panel-border);
+        border-radius: 10px;
+        background: rgba(15, 23, 42, 0.35);
+        color: var(--soft);
+        font-size: 1.3rem;
+        cursor: pointer;
+      }
+
+      .view-pane[hidden] { display: none; }
+
+      .screen-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .screen-list { list-style: none; padding: 0; margin: 0; }
+      .screen-list li { display: flex; justify-content: space-between; gap: 14px; padding: 14px 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
+      .screen-list li:last-child { border-bottom: 0; }
+      .screen-list span, .screen-copy { color: var(--muted); font-size: 0.84rem; }
+      .settings-form { display: grid; gap: 18px; max-width: 560px; }
+      .settings-row { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 14px 0; border-bottom: 1px solid rgba(148, 163, 184, 0.12); }
+      .settings-row label { display: grid; gap: 5px; }
+      .settings-row input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--success); }
+      .settings-save { width: fit-content; border: 1px solid var(--accent); border-radius: 8px; padding: 10px 16px; background: var(--accent-soft); color: var(--soft); font: inherit; cursor: pointer; }
+      .screen-status { min-height: 1.2em; color: #a7f3d0; font-size: 0.82rem; }
+
       .stats-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(170px, 1fr));
@@ -390,9 +421,37 @@
         }
 
         .sidebar {
+          display: none;
           width: 100%;
+          border-right: 0;
           border-bottom: 1px solid var(--panel-border);
-          background: transparent;
+          padding: 8px 18px 18px;
+          background: rgba(7, 19, 29, 0.78);
+        }
+
+        .sidebar.is-open {
+          display: flex;
+        }
+
+        .menu-toggle {
+          display: grid;
+          place-items: center;
+          flex: 0 0 auto;
+        }
+
+        .content {
+          padding: 18px 18px 32px;
+        }
+
+        .topbar {
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+          gap: 14px;
+        }
+
+        .topbar > div {
+          flex: 1;
         }
 
         .stats-grid {
@@ -404,15 +463,23 @@
         }
 
         .topbar {
-          flex-direction: column;
-          align-items: flex-start;
+          flex-direction: row;
+          align-items: center;
+        }
+
+        .screen-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .logout-btn {
+          padding: 8px 0;
         }
       }
     </style>
   </head>
   <body class="portal-ready">
     <div class="portal-shell" id="portal-app" aria-live="polite">
-      <aside class="sidebar" aria-label="Sidebar navigation">
+      <aside class="sidebar" id="portalSidebar" aria-label="Sidebar navigation">
         <div class="brand-row">
           <div class="brand-copy">
             <small>ID: AC123456OD</small>
@@ -421,11 +488,11 @@
         </div>
 
         <nav class="nav-group" aria-label="Main navigation">
-          <button type="button" class="nav-item active">Overview</button>
-          <button type="button" class="nav-item">Requests</button>
-          <button type="button" class="nav-item">Providers</button>
-          <button type="button" class="nav-item">Reports</button>
-          <button type="button" class="nav-item">Settings</button>
+          <button type="button" class="nav-item active" data-view="overview">Overview</button>
+          <button type="button" class="nav-item" data-view="requests">Requests</button>
+          <button type="button" class="nav-item" data-view="providers">Providers</button>
+          <button type="button" class="nav-item" data-view="reports">Reports</button>
+          <button type="button" class="nav-item" data-view="settings">Settings</button>
         </nav>
 
         <div class="sidebar-footer">
@@ -436,13 +503,15 @@
 
       <main class="content">
         <header class="topbar">
+          <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="portalSidebar">&#9776;</button>
           <div>
             <p>Operations Center</p>
-            <h1>Executive Overview</h1>
+            <h1 id="screenTitle">Executive Overview</h1>
           </div>
           <a href="index.html" type="button" class="logout-btn" id="logout-button">Log Out</a>
         </header>
 
+        <section class="view-pane" id="view-overview" data-title="Executive Overview">
         <section class="stats-grid" aria-label="Key metrics">
           <article class="priority-stat-card">
             <div class="stat-label">Reports</div>
@@ -514,6 +583,43 @@
               </li>
             </ul>
           </article>
+        </section>
+        </section>
+
+        <section class="view-pane" id="view-requests" data-title="Service Requests" hidden>
+          <section class="stats-grid" aria-label="Request metrics">
+            <article class="stat-card"><div class="stat-label">Pending</div><div class="stat-value" id="requestPending">0</div><div class="stat-trend">Awaiting a provider response</div></article>
+            <article class="stat-card"><div class="stat-label">Matched</div><div class="stat-value" id="requestMatched">0</div><div class="stat-trend-good">Accepted by a provider</div></article>
+            <article class="stat-card"><div class="stat-label">Declined</div><div class="stat-value" id="requestDeclined">0</div><div class="stat-trend">Not accepted</div></article>
+            <article class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="requestTotal">0</div><div class="stat-trend">Requests received</div></article>
+          </section>
+          <article class="panel"><h2>Request activity</h2><p class="screen-copy">Request volumes and statuses are summarized here. Customer location details remain in the provider request workflow.</p><ul class="screen-list" id="requestActivity"></ul></article>
+        </section>
+
+        <section class="view-pane" id="view-providers" data-title="Service Providers" hidden>
+          <section class="screen-grid">
+            <article class="panel"><h2>Provider overview</h2><ul class="screen-list"><li><strong>Active providers</strong><span>259</span></li><li><strong>Verification queue</strong><span>3 awaiting review</span></li><li><strong>Onboarding</strong><span>8 in progress</span></li></ul></article>
+            <article class="panel"><h2>Provider standards</h2><ul class="screen-list"><li><strong>Identity checks</strong><span class="badge success">Required</span></li><li><strong>Trade credentials</strong><span class="badge success">Required</span></li><li><strong>Customer rating</strong><span class="badge warning">Monitored</span></li></ul></article>
+          </section>
+        </section>
+
+        <section class="view-pane" id="view-reports" data-title="Reports & Performance" hidden>
+          <section class="stats-grid" aria-label="Report metrics">
+            <article class="stat-card"><div class="stat-label">Completed services</div><div class="stat-value">93</div><div class="stat-trend-good">+20.1% this week</div></article>
+            <article class="stat-card"><div class="stat-label">Average match time</div><div class="stat-value">11 min</div><div class="stat-trend-good">Within target</div></article>
+            <article class="stat-card"><div class="stat-label">Invoice currency</div><div class="stat-value">NGN</div><div class="stat-trend">Nigerian naira</div></article>
+            <article class="stat-card"><div class="stat-label">Open reports</div><div class="stat-value">14</div><div class="stat-trend-bad">Review this week</div></article>
+          </section>
+          <article class="panel"><h2>Weekly performance</h2><ul class="screen-list"><li><strong>Customer satisfaction</strong><span>4.8 / 5</span></li><li><strong>Requests matched</strong><span>87%</span></li><li><strong>Invoice disputes</strong><span>2 open</span></li></ul></article>
+        </section>
+
+        <section class="view-pane" id="view-settings" data-title="Console Settings" hidden>
+          <article class="panel"><h2>Preferences</h2><form class="settings-form" id="settingsForm">
+            <div class="settings-row"><label for="notifyMatches"><strong>Match notifications</strong><span class="screen-copy">Notify staff about newly matched services.</span></label><input id="notifyMatches" type="checkbox"></div>
+            <div class="settings-row"><label for="notifyReports"><strong>Report alerts</strong><span class="screen-copy">Show a notice for service reports that need review.</span></label><input id="notifyReports" type="checkbox"></div>
+            <div class="settings-row"><label><strong>Price display</strong><span class="screen-copy">All service prices are displayed in NGN.</span></label><strong>NGN</strong></div>
+            <button class="settings-save" type="submit">Save preferences</button><p class="screen-status" id="settingsStatus" role="status"></p>
+          </form></article>
         </section>
       </main>
     </div>

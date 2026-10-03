@@ -136,6 +136,42 @@
   overflow: auto;
   padding-right: 0.25rem;
 }
+.demo-message-form {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 38px;
+  align-items: end;
+  gap: 0.55rem;
+}
+.demo-message-form textarea {
+  min-height: 40px;
+  max-height: 90px;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 10px;
+  background: rgba(255,255,255,.08);
+  color: var(--white);
+  font: 400 0.82rem var(--font-body);
+  resize: vertical;
+}
+.demo-message-form textarea::placeholder { color: rgba(255,255,255,.45); }
+.demo-photo-button, .demo-send-button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  color: var(--white);
+  cursor: pointer;
+}
+.demo-send-button { background: var(--white); color: var(--black); font-size: 1.1rem; }
+.demo-invoice-form { display: grid; grid-template-columns: minmax(0,1fr) minmax(100px,.65fr) auto; gap: .5rem; align-items: center; }
+.demo-invoice-form input { width: 100%; min-width: 0; height: 38px; padding: 0 .65rem; border: 1px solid rgba(255,255,255,.2); border-radius: 8px; background: rgba(255,255,255,.08); color: var(--white); font: 400 .76rem var(--font-body); }
+.demo-invoice-form input::placeholder { color: rgba(255,255,255,.45); }
+.demo-amount-field { display: flex; align-items: center; gap: .35rem; color: rgba(255,255,255,.65); font-size: .66rem; }
+.demo-invoice-form button { min-height: 38px; padding: 0 .7rem; border: 0; border-radius: 8px; background: #d6f1df; color: #17211f; font: 600 .72rem var(--font-body); cursor: pointer; }
+.demo-photo { max-width: 180px; max-height: 150px; border-radius: 10px; object-fit: cover; }
 .msg-row {
   display: flex;
 }
@@ -187,6 +223,7 @@
   color: var(--white);
   border: 1px solid rgba(255,255,255,.4);
 }
+.invoice-btn[hidden] { display: none; }
 .invoice-btn:hover {
   background: var(--white);
   color: var(--black);
